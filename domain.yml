@@ -8,7 +8,7 @@ intents:
   - mood_great
   - mood_unhappy
   - bot_challenge
-  - query_entities
+  - query_attribute
 
 entities:
   - PaymentMethod
@@ -51,6 +51,19 @@ responses:
 
   utter_query_entities:
   - text: "test passed bhaar me jaa"
+
+  utter_out_of_scope:
+  - text: Sorry, I cannot help you with that.
+  - text: I'm not able to help you with that.
+
+actions:
+  - action_query_attribute
+  - utter_greet
+  - utter_goodbye
+  - utter_out_of_scope
+  - utter_happy
+  - utter_did_that_help
+  - utter_cheer_up
 
 session_config:
   session_expiration_time: 60
