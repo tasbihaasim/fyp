@@ -148,40 +148,38 @@ class ActionQueryAttribute(Action):
         return "action_query_attribute"
 
     def run(self, dispatcher, tracker, domain):
-        dispatcher.utter_message("Hello world")
-        return []
-        # graph_database = GraphDatabase()
+        graph_database = GraphDatabase()
 
-        # # get entity type of entity
-        # entity_type = get_entity_type(tracker)
+        # get entity type of entity
+        entity_type = get_entity_type(tracker)
 
-        # if entity_type is None:
+        if entity_type is None:
+            dispatcher.utter_template("utter_rephrase", tracker)
+            return []
+
+        # get name of entity and attribute of interest
+        name = get_entity_type(tracker)
+        attribute = get_attribute(tracker)
+
+        # if name is None or attribute is None:
         #     dispatcher.utter_template("utter_rephrase", tracker)
-        #     return []
+        #     slots = [SlotSet("mention", None)]
+        #     reset_attribute_slots(slots, entity_type, tracker)
+        #     return slots
 
-        # # get name of entity and attribute of interest
-        # name = get_entity_type(tracker)
-        # attribute = get_attribute(tracker)
+        # query knowledge base
+        value = graph_database.get_attribute_of(name, attribute)
 
-        # # if name is None or attribute is None:
-        # #     dispatcher.utter_template("utter_rephrase", tracker)
-        # #     slots = [SlotSet("mention", None)]
-        # #     reset_attribute_slots(slots, entity_type, tracker)
-        # #     return slots
+        # utter response
+        if value is not None and len(value) == 1:
+            dispatcher.utter_message(
+                f"'{value[0]}'."
+            )
+        else:
+            dispatcher.utter_message(
+                f"Did not found a valid value for attribute {attribute} for entity '{name}'."
+            )
 
-        # # query knowledge base
-        # value = graph_database.get_attribute_of(name, attribute)
-
-        # # utter response
-        # if value is not None and len(value) == 1:
-        #     dispatcher.utter_message(
-        #         f"'{value}'."
-        #     )
-        # else:
-        #     dispatcher.utter_message(
-        #         f"Did not found a valid value for attribute {attribute} for entity '{name}'."
-        #     )
-
-        # slots = [SlotSet("mention", None), SlotSet(entity_type, name)]
-        # # reset_attribute_slots(slots, entity_type, tracker)
-        # return slots
+        slots = [SlotSet("mention", None), SlotSet(entity_type, name)]
+        # reset_attribute_slots(slots, entity_type, tracker)
+        return slots
