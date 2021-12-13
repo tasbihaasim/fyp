@@ -32,4 +32,4 @@ stories:
 - story: test
   steps:
   - intent: query_attribute
-  - action: action_query_attribute
+  - action: action_hello_world
