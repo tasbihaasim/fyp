@@ -146,7 +146,7 @@ class KnowledgeGraph(KnowledgeBase):
         
         return self._execute_attribute_query(
             f"""
-              match (n {{n4sch__name: "{entity}"}}
+              match (n {{n4sch__name: "{entity}"}})
               return n.{attribute}
             """
         )
